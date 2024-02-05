@@ -248,7 +248,7 @@ def verify_placement_sm2(app_charcs, placements, resources, pr):
     for i in range(len(placements)):
         if placements[i] != []:
             c = Counter([x[0] for x in placements[i]])
-            num_replicas = c.total()
+            num_replicas = sum(c.values()) #c.total()
             max_replicas_per_site = c.most_common(1)[0][1]
             min_replicas = 3*app_charcs[i][0] + 2*(app_charcs[i][1]*max_replicas_per_site + app_charcs[i][2]) + 1
             if num_replicas < min_replicas:
