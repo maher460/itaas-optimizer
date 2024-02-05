@@ -231,8 +231,8 @@ def verify_placement_sm2(app_charcs, placements, resources, pr):
                     if z[0] == s:
                         found = True
                 if not found:
-                    print("[Verification Failed]: Site name does not exist!")
-                    return False
+                    #print("[Verification Failed]: Site name does not exist!")
+                    return {"pass": False, "comment":"Site name does not exist!"}
 
     # Check if minimum number of sites is satisfied
     for i in range(len(placements)):
@@ -241,8 +241,8 @@ def verify_placement_sm2(app_charcs, placements, resources, pr):
             num_sites = len(list(c.elements()))
             min_sites = 2*app_charcs[i][1] + 1
             if num_sites < min_sites:
-                print("[Verification Failed]: Number of sites is less than minimum!")
-                return False
+                #print("[Verification Failed]: Number of sites is less than minimum!")
+                return {"pass": False, "comment":"Number of sites is less than minimum"}
 
     # Check if total number of replicas is less than minimum
     for i in range(len(placements)):
@@ -252,11 +252,8 @@ def verify_placement_sm2(app_charcs, placements, resources, pr):
             max_replicas_per_site = c.most_common(1)[0][1]
             min_replicas = 3*app_charcs[i][0] + 2*(app_charcs[i][1]*max_replicas_per_site + app_charcs[i][2]) + 1
             if num_replicas < min_replicas:
-                print("App: ", i+1)
-                print(num_replicas)
-                print(min_replicas)
-                print("[Verification Failed]: Total number of replicas is less than minimum!")
-                return False
+                #print("[Verification Failed]: Total number of replicas is less than minimum!")
+                return {"pass": False, "comment":"Total number of replicas is less than minimum"}
 
     # check latency requirement (based on PBFT)
     for i in range(len(placements)):
@@ -276,8 +273,8 @@ def verify_placement_sm2(app_charcs, placements, resources, pr):
                 print("[LAT] Max Expected Latency: ", max_exp_lat)
                 print("[LAT] Application Max Limit: ", app_charcs[i][3])
             if max_exp_lat > app_charcs[i][3]:
-                print("[Verification Failed]: Max expected latency is too high!")
-                return False
+                #print("[Verification Failed]: Max expected latency is too high!")
+                return {"pass": False, "comment":"Max expected latency is too high"}
 
     # Check each specific machine exists, and no machine is overloaded
     machines = defaultdict(int)
@@ -289,21 +286,22 @@ def verify_placement_sm2(app_charcs, placements, resources, pr):
                     if a[0] == x[0]:
                         found = True
                         if a[3] < x[1]:
-                            print("[Verification Failed]: Specific machine does not exist!")
-                            return False
+                            #print("[Verification Failed]: Specific machine does not exist!")
+                            return {"pass": False, "comment":"Specific machine does not exist"}
                 if not found:
-                    return False
+                    #print("[Verification Failed]: Site name does not exist!")
+                    return {"pass": False, "comment":"Site name does not exist!"}
                 comb_name = x[0] + str(x[1])
                 machines[comb_name] += 1
     if max(machines.values()) > NUM_REPS_PER_MACHINE:
-        print("[Verification Failed]: Too many replicas in one machine!")
-        return False
+        #print("[Verification Failed]: Too many replicas in one machine!")
+        return {"pass": False, "comment":"Too many replicas in one machine"}
 
     for i in range(len(placements)):
         if placements[i] != []:
             if(len(placements[i]) != len(list(set(placements[i])))):
-                print("[Verification Failed]: More than one replica of the same application in the same machine!")
-                return False 
+                #print("[Verification Failed]: More than one replica of the same application in the same machine!")
+                return {"pass": False, "comment":"More than one replica of the same application in the same machine"}
 
     # Check if proactive recovery group contains only apps with same charcs and no pr group is overloaded
     if pr == True:
@@ -325,25 +323,24 @@ def verify_placement_sm2(app_charcs, placements, resources, pr):
                     if x[0] in inv_pr_groups:
                         if x[1] in inv_pr_groups[x[0]]:
                             if (len(inv_pr_groups[x[0]][x[1]]) >= NUM_REPS_PER_MACHINE):
-                                print("[Verification Failed]: Proactive Recovery group contains more replicas than max allowed!")
-                                return False
+                                #print("[Verification Failed]: Proactive Recovery group contains more replicas than max allowed!")
+                                return {"pass": False, "comment":"Proactive Recovery group contains more replicas than max allowed"}
                             for app2 in inv_pr_groups[x[0]][x[1]]:
                                 if app_pr_keys[app2] != app_pr_keys[i]:
-                                    print("[Verification Failed]: Proactive Recovery group contains apps with different characteristics!")
-                                    return False
+                                    #print("[Verification Failed]: Proactive Recovery group contains apps with different characteristics!")
+                                    return {"pass": False, "comment":"Proactive Recovery group contains apps with different characteristics"}
                             inv_pr_groups[x[0]][x[1]].append(i)
                         else:
                             inv_pr_groups[x[0]][x[1]] = [i]
                     else:
                         inv_pr_groups[x[0]] = {x[1]: [i]}
 
-    return True
+    return {"pass": True, "comment": ""}
 
 
 def calc_quality_service_model_2(app_charcs, placements, resources, pr):
 
-    if not verify_placement_sm2(app_charcs, placements, resources, pr):
-        return -1
+    result = verify_placement_sm2(app_charcs, placements, resources, pr)
 
     num_apps = 0
     num_replicas = 0
@@ -392,7 +389,9 @@ def calc_quality_service_model_2(app_charcs, placements, resources, pr):
     avg_lat = sum(all_lat) / float(len(all_lat))
     max_lat = max(all_lat)
 
-    return (num_apps, num_replicas, num_machines, round(min_lat, 2), round(avg_lat, 2), round(max_lat, 2), round(min_lat_from_constraint, 2), round(avg_lat_from_constraint, 2), round(max_lat_from_constraint, 2))
+    result["result"] = (num_apps, num_replicas, num_machines, round(min_lat, 2), round(avg_lat, 2), round(max_lat, 2), round(min_lat_from_constraint, 2), round(avg_lat_from_constraint, 2), round(max_lat_from_constraint, 2))
+
+    return result
 
 
 def print_quality(res):
@@ -400,6 +399,11 @@ def print_quality(res):
         print("Total number of apps assigned [higher is better]:", res[0])
         print("Total number of replicas assigned [lower is better]:", res[1])
         print("Total number of machines used [lower is better]:", res[2])
+        print("Min/Avg/Max Latency (in seconds) [lower is better]:", str(res[4]) + " / " + str(res[5]) + " / " + str(res[6]))
+        print("Min/Avg/Max Latency from Constraint (in seconds) [higher is better]:", str(res[7]) + " / " + str(res[8]) + " / " + str(res[9]))
+    if(len(res) == 8):
+        print("Total number of apps assigned [higher is better]:", res[0])
+        print("Total number of replicas assigned [lower is better]:", res[1])
         print("Min/Avg/Max Latency (in seconds) [lower is better]:", str(res[4]) + " / " + str(res[5]) + " / " + str(res[6]))
         print("Min/Avg/Max Latency from Constraint (in seconds) [higher is better]:", str(res[7]) + " / " + str(res[8]) + " / " + str(res[9]))
 
