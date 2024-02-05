@@ -3,6 +3,7 @@ from collections import defaultdict
 import geopy.distance
 import itertools
 import csv
+import math
 
 ############################################################
 # DEBUG MODE
@@ -94,70 +95,78 @@ def verify_placement_sm1(app_charcs, placements, resources):
 
     # check every site exists
     for i in range(len(placements)):
-        c = Counter(placements[i])
-        sites = list(c.elements())
-        for s in sites:
-            found = False
-            for z in resources:
-                if z[0] == s:
-                    found = True
-            if not found:
-                # print("[Verification Failed]: Site name does not exist!")
-                return {"pass": False, "comment":"Site name does not exist!"}
+        if placements[i] != []:
+            c = Counter(placements[i])
+            sites = list(c.elements())
+            for s in sites:
+                found = False
+                for z in resources:
+                    if z[0] == s:
+                        found = True
+                if not found:
+                    # print("[Verification Failed]: Site name does not exist!")
+                    return {"pass": False, "comment":"Site name does not exist!"}
     
     # Check if minimum number of sites is satisfied
     for i in range(len(placements)):
-        c = Counter(placements[i])
-        num_sites = len(list(c.elements()))
-        min_sites = 2*app_charcs[i][1] + 1
-        if num_sites < min_sites:
-            # print("[Verification Failed]: Number of sites is less than minimum!")
-            return {"pass": False, "comment":"Number of sites is less than minimum"}
+        if placements[i] != []:
+            c = Counter(placements[i])
+            num_sites = len(list(c.elements()))
+            min_sites = 2*app_charcs[i][1] + 1
+            if num_sites < min_sites:
+                # print("[Verification Failed]: Number of sites is less than minimum!")
+                return {"pass": False, "comment":"Number of sites is less than minimum"}
 
     # Check if total number of replicas is less than minimum
     for i in range(len(placements)):
-        c = Counter(placements[i])
-        num_replicas = sum(c.values()) #c.total()
-        max_replicas_per_site = c.most_common(1)[0][1]
-        min_replicas = 3*app_charcs[i][0] + 2*(app_charcs[i][1]*max_replicas_per_site + 1) + 1
-        if num_replicas < min_replicas:
-            # print("[Verification Failed]: Total number of replicas is less than minimum!")
-            return {"pass": False, "comment":"Total number of replicas is less than minimum"}
+        if placements[i] != []:
+            c = Counter(placements[i])
+            num_sites = len(list(c.elements()))
+            num_replicas = sum(c.values()) #c.total()
+            # max_replicas_per_site = c.most_common(1)[0][1]
+            # min_replicas = 3*app_charcs[i][0] + 2*(app_charcs[i][1]*max_replicas_per_site + 1) + 1
+            # min_replicas = 3*app_charcs[i][0] + 2*(app_charcs[i][1]*max_replicas_per_site + app_charcs[i][2]) + 1
+            u = math.ceil(float(3*app_charcs[i][0]*app_charcs[i][1]+app_charcs[i][1]+num_sites*app_charcs[i][2])/float(num_sites-2*app_charcs[i][1]))
+            min_replicas = 3*app_charcs[i][0]+2*u+1
+            if num_replicas < min_replicas:
+                # print("[Verification Failed]: Total number of replicas is less than minimum!")
+                return {"pass": False, "comment":"Total number of replicas is less than minimum"}
 
     # check latency (based on PBFT)
     for i in range(len(placements)):
-        c = Counter(placements[i])
-        sites = list(c.elements())
-        sites_loc = []
-        for s in sites:
-            for z in resources:
-                if z[0] == s:
-                    sites_loc.append(z[2])
-        exp_lats = []
-        for j in range(len(sites)):
+        if placements[i] != []:
+            c = Counter(placements[i])
+            sites = list(c.elements())
+            sites_loc = []
+            for s in sites:
+                for z in resources:
+                    if z[0] == s:
+                        sites_loc.append(z[2])
+            exp_lats = []
+            for j in range(len(sites)):
+                if DEBUG == 1:
+                    print("###################")
+                    print(sites)
+                    print(app_charcs)
+                    print(sites_loc)
+                    print("###################")
+                exp_lats.append(calc_lat(app_charcs[i][4], sites_loc[j], sites_loc))
+            max_exp_lat = max(exp_lats)
             if DEBUG == 1:
-                print("###################")
-                print(sites)
-                print(app_charcs)
-                print(sites_loc)
-                print("###################")
-            exp_lats.append(calc_lat(app_charcs[i][4], sites_loc[j], sites_loc))
-        max_exp_lat = max(exp_lats)
-        if DEBUG == 1:
-            print("[LAT] Max Expected Latency: ", max_exp_lat)
-            print("[LAT] Application Max Limit: ", app_charcs[i][3])
-        if max_exp_lat > app_charcs[i][3]:
-            # print("[Verification Failed]: Max expected latency is too high!")
-            return {"pass": False, "comment":"Max expected latency is too high"}
+                print("[LAT] Max Expected Latency: ", max_exp_lat)
+                print("[LAT] Application Max Limit: ", app_charcs[i][3])
+            if max_exp_lat > app_charcs[i][3]:
+                # print("[Verification Failed]: Max expected latency is too high!")
+                return {"pass": False, "comment":"Max expected latency is too high"}
 
     return {"pass": True, "comment": ""}
 
 def calc_quality_service_model_1(app_charcs, placements, resources):
     
     result = verify_placement_sm1(app_charcs, placements, resources)
-    if result["pass"] == False:
-        result["result"] = []
-        return result
+    # if result["pass"] == False:
+    #     result["result"] = []
+    #     return result
 
     num_apps = 0
     num_replicas = 0
@@ -167,31 +176,33 @@ def calc_quality_service_model_1(app_charcs, placements, resources):
     all_lat = []
 
     for p in placements:
-        num_apps += 1
-        num_replicas += len(p)
+        if p != []:
+            num_apps += 1
+            num_replicas += len(p)
 
     for i in range(len(placements)):
-        c = Counter(placements[i])
-        sites = list(c.elements())
-        sites_loc = []
-        for s in sites:
-            for z in resources:
-                if z[0] == s:
-                    sites_loc.append(z[2])
-        exp_lats = []
-        for j in range(len(sites)):
-            if DEBUG == 1:
-                print("###################")
-                print(sites)
-                print(app_charcs)
-                print(sites_loc)
-                print("###################")
-            exp_lats.append(calc_lat(app_charcs[i][4], sites_loc[j], sites_loc))
-        max_exp_lat = max(exp_lats)
-        total_lat += max_exp_lat
-        total_lat_from_constraint += app_charcs[i][3] - max_exp_lat
-        all_lat_from_constraint.append(app_charcs[i][3] - max_exp_lat)
-        all_lat.append(max_exp_lat)
+        if placements[i] != []:
+            c = Counter(placements[i])
+            sites = list(c.elements())
+            sites_loc = []
+            for s in sites:
+                for z in resources:
+                    if z[0] == s:
+                        sites_loc.append(z[2])
+            exp_lats = []
+            for j in range(len(sites)):
+                if DEBUG == 1:
+                    print("###################")
+                    print(sites)
+                    print(app_charcs)
+                    print(sites_loc)
+                    print("###################")
+                exp_lats.append(calc_lat(app_charcs[i][4], sites_loc[j], sites_loc))
+            max_exp_lat = max(exp_lats)
+            total_lat += max_exp_lat
+            total_lat_from_constraint += app_charcs[i][3] - max_exp_lat
+            all_lat_from_constraint.append(app_charcs[i][3] - max_exp_lat)
+            all_lat.append(max_exp_lat)
 
     min_lat_from_constraint = min(all_lat_from_constraint)
     avg_lat_from_constraint = sum(all_lat_from_constraint) / float(len(all_lat_from_constraint))

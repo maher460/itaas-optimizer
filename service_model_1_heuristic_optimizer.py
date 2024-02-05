@@ -176,9 +176,8 @@ def sm1_closest_max_sites_meet_lat(app_charcs, resources):
                 site_name = fast_sites[i][0]
                 for j in range(reps_per_site):
                     placement.append(site_name)
-
-            placements.append(placement)
             break
+        placements.append(placement)
 
     return placements
 
@@ -216,8 +215,7 @@ def sm1_best_lat_max_sites_meet_lat(app_charcs, resources):
                 site_name = fast_sites[i][0]
                 for j in range(reps_per_site):
                     placement.append(site_name)
-
-            placements.append(placement)
             break
+        placements.append(placement)
 
     return placements

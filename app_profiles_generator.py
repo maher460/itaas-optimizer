@@ -8,7 +8,7 @@ f_ops = [1, 1, 1, 2, 2, 3]
 d_ops = [1, 1, 1, 2, 2, 3]
 k_ops = [1, 1, 1, 2, 2, 3]
 r_ops = [1, 1, 1, 1, 1, 3, 3, 3, 3, 6, 6, 6, 12, 24, 48]
-lat_ops = [50, 100, 200, 500, 1000]
+lat_ops = [100, 200, 500, 1000]
 loc_ops = [(x[0],x[1]) for x in read_csv_to_list("./data/geo_coordinates_usa.csv")]
 
 num_apps_ops = [3, 5, 7, 9, 11, 13, 15, 20, 30, 50, 100]

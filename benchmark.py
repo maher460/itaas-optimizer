@@ -3,8 +3,8 @@ from baas_utilities import *
 #import psutil
 import time
 
-#num_apps_ops = [3, 5, 7, 9, 11, 13, 15, 20, 30, 50, 100]
-num_apps_ops = [100]
+num_apps_ops = [3, 5, 7, 9, 11, 13, 15, 20, 30, 50, 100]
+#num_apps_ops = [100]
 num_list_per_size = 5
 
 aws_locations =     [("CO1", "Columbus, Ohio", (39.983334, -82.983330), 30), 
@@ -133,7 +133,8 @@ for num_apps in apps_collection.keys():
                 else:
                     to_write.append(str(0))
                     to_write.append(temp_res[i]["comment"])
-                    to_write += ["","","","","","","",""]
+                    #to_write += ["","","","","","","",""]
+                    to_write += [str(x) for x in temp_res[i]["result"]]
                 writer.writerow(to_write)
 
         num_processed += 1
