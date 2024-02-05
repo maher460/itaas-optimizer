@@ -87,8 +87,10 @@ def calc_lat(app_loc, leader_loc, sites_loc):
 
 def verify_placement_sm1(app_charcs, placements, resources):
     
-    if len(app_charcs) != len(placements):
-        return False
+    # Check if um Apps is same as num placements
+    # if len(app_charcs) != len(placements):
+    #     print("[Verification Failed]: Num Apps is not same as num placements")
+    #     return {"pass": False, "comment":"Num Apps is not same as num placements"}
 
     # check every site exists
     for i in range(len(placements)):
@@ -100,8 +102,8 @@ def verify_placement_sm1(app_charcs, placements, resources):
                 if z[0] == s:
                     found = True
             if not found:
-                print("[Verification Failed]: Site name does not exist!")
-                return False
+                # print("[Verification Failed]: Site name does not exist!")
+                return {"pass": False, "comment":"Site name does not exist!"}
     
     # Check if minimum number of sites is satisfied
     for i in range(len(placements)):
@@ -109,18 +111,18 @@ def verify_placement_sm1(app_charcs, placements, resources):
         num_sites = len(list(c.elements()))
         min_sites = 2*app_charcs[i][1] + 1
         if num_sites < min_sites:
-            print("[Verification Failed]: Number of sites is less than minimum!")
-            return False
+            # print("[Verification Failed]: Number of sites is less than minimum!")
+            return {"pass": False, "comment":"Number of sites is less than minimum"}
 
     # Check if total number of replicas is less than minimum
     for i in range(len(placements)):
         c = Counter(placements[i])
-        num_replicas = c.total()
+        num_replicas = sum(c.values()) #c.total()
         max_replicas_per_site = c.most_common(1)[0][1]
         min_replicas = 3*app_charcs[i][0] + 2*(app_charcs[i][1]*max_replicas_per_site + 1) + 1
         if num_replicas < min_replicas:
-            print("[Verification Failed]: Total number of replicas is less than minimum!")
-            return False
+            # print("[Verification Failed]: Total number of replicas is less than minimum!")
+            return {"pass": False, "comment":"Total number of replicas is less than minimum"}
 
     # check latency (based on PBFT)
     for i in range(len(placements)):
@@ -145,15 +147,17 @@ def verify_placement_sm1(app_charcs, placements, resources):
             print("[LAT] Max Expected Latency: ", max_exp_lat)
             print("[LAT] Application Max Limit: ", app_charcs[i][3])
         if max_exp_lat > app_charcs[i][3]:
-            print("[Verification Failed]: Max expected latency is too high!")
-            return False
+            # print("[Verification Failed]: Max expected latency is too high!")
+            return {"pass": False, "comment":"Max expected latency is too high"}
 
-    return True
+    return {"pass": True, "comment": ""}
 
 def calc_quality_service_model_1(app_charcs, placements, resources):
     
-    if not verify_placement_sm1(app_charcs, placements, resources):
-        return -1
+    result = verify_placement_sm1(app_charcs, placements, resources)
+    if result["pass"] == False:
+        result["result"] = []
+        return result
 
     num_apps = 0
     num_replicas = 0
@@ -197,7 +201,9 @@ def calc_quality_service_model_1(app_charcs, placements, resources):
     avg_lat = sum(all_lat) / float(len(all_lat))
     max_lat = max(all_lat)
 
-    return (num_apps, num_replicas, round(min_lat, 2), round(avg_lat, 2), round(max_lat, 2), round(min_lat_from_constraint, 2), round(avg_lat_from_constraint, 2), round(max_lat_from_constraint, 2))
+    result["result"] = [num_apps, num_replicas, round(min_lat, 2), round(avg_lat, 2), round(max_lat, 2), round(min_lat_from_constraint, 2), round(avg_lat_from_constraint, 2), round(max_lat_from_constraint, 2)]
+
+    return result
 
 
 

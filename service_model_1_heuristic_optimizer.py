@@ -1,4 +1,5 @@
 from baas_utilities import *
+import math
 
 def sm1_round_robin_min_sites(app_charcs, resources):
     placements = []
@@ -12,6 +13,7 @@ def sm1_round_robin_min_sites(app_charcs, resources):
         u = math.ceil(float(3*f*d+d+S*k)/float(S-2*d))
         num_replicas = 3*f+2*u+1
         reps_per_site = math.ceil(num_replicas/S)
+        num_replicas = reps_per_site * S
 
         for i in range(S):
             site_name = resources[cur_site][0]
@@ -35,6 +37,7 @@ def sm1_closest_min_sites(app_charcs, resources):
         u = math.ceil(float(3*f*d+d+S*k)/float(S-2*d))
         num_replicas = 3*f+2*u+1
         reps_per_site = math.ceil(num_replicas/S)
+        num_replicas = reps_per_site * S
 
         fast_sites = faster_sites(S, app[4], resources)
 
@@ -57,6 +60,7 @@ def sm1_best_lat_min_sites(app_charcs, resources):
         u = math.ceil(float(3*f*d+d+S*k)/float(S-2*d))
         num_replicas = 3*f+2*u+1
         reps_per_site = math.ceil(num_replicas/S)
+        num_replicas = reps_per_site * S
 
         fast_sites = fastest_sites(S, app[4], resources)
 
@@ -80,6 +84,7 @@ def sm1_round_robin_max_sites(app_charcs, resources):
         u = math.ceil(float(3*f*d+d+S*k)/float(S-2*d))
         num_replicas = 3*f+2*u+1
         reps_per_site = math.ceil(num_replicas/S)
+        num_replicas = reps_per_site * S
 
         for i in range(S):
             site_name = resources[cur_site][0]
@@ -103,6 +108,7 @@ def sm1_closest_max_sites(app_charcs, resources):
         u = math.ceil(float(3*f*d+d+S*k)/float(S-2*d))
         num_replicas = 3*f+2*u+1
         reps_per_site = math.ceil(num_replicas/S)
+        num_replicas = reps_per_site * S
 
         fast_sites = faster_sites(S, app[4], resources)
 
@@ -125,6 +131,7 @@ def sm1_best_lat_max_sites(app_charcs, resources):
         u = math.ceil(float(3*f*d+d+S*k)/float(S-2*d))
         num_replicas = 3*f+2*u+1
         reps_per_site = math.ceil(num_replicas/S)
+        num_replicas = reps_per_site * S
 
         fast_sites = fastest_sites(S, app[4], resources)
 
@@ -151,6 +158,7 @@ def sm1_closest_max_sites_meet_lat(app_charcs, resources):
             u = math.ceil(float(3*f*d+d+S*k)/float(S-2*d))
             num_replicas = 3*f+2*u+1
             reps_per_site = math.ceil(num_replicas/S)
+            num_replicas = reps_per_site * S
 
             fast_sites = faster_sites(S, app[4], resources)
 
@@ -190,6 +198,7 @@ def sm1_best_lat_max_sites_meet_lat(app_charcs, resources):
             u = math.ceil(float(3*f*d+d+S*k)/float(S-2*d))
             num_replicas = 3*f+2*u+1
             reps_per_site = math.ceil(num_replicas/S)
+            num_replicas = reps_per_site * S
 
             fast_sites = fastest_sites(S, app[4], resources)
 
