@@ -5,7 +5,7 @@ import time
 
 num_apps_ops = [3, 5, 7, 9, 11, 13, 15, 20, 30, 50, 100]
 #num_apps_ops = [100]
-num_list_per_size = 5
+num_list_per_size = 10
 
 aws_locations =     [("CO1", "Columbus, Ohio", (39.983334, -82.983330), 30), 
                      ("CO2", "Columbus, Ohio", (39.983334, -82.983330), 30), 
@@ -69,14 +69,14 @@ apps_collection = read_app_lists(num_apps_ops, num_list_per_size)
 
 total = 0
 for num_apps in apps_collection.keys():
-    total += len(apps_collection[num_apps])
+    total += len(apps_collection[num_apps]) - 5
 # bench_results = {}
 
 num_processed = 0
 
 for num_apps in apps_collection.keys():
     #bench_results[num_apps] = []
-    for list_num in range(len(apps_collection[num_apps])):
+    for list_num in range(5,len(apps_collection[num_apps])):
         
         temp_res = []
         for func in sm1_functions_to_test:
