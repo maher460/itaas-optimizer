@@ -110,8 +110,10 @@ def sm2_milp_max_sites(app_charcs, resources):
     #model += c >= (xsum( (s[app][l_site] * lats_apps[app][l_site] * 2 + z[app][l_site][s1_site] * lats_sites[l_site][s1_site] + z[app][s2_site][s3_site] * lats_sites[s2_site][s3_site] * 2) / app_charcs[app][3] for (app, l_site, s1_site, s2_site, s3_site) in product(range(apps), range(sites), range(sites), range(sites), range(sites))) / (apps * sites * sites * sites * sites))
     model += r >= xsum(x[app][site] for (app,site) in product(range(apps),range(sites))) / float(apps*sites*servers)
 
-    model.objective = maximize(xsum(a[app][conf] for (app, conf) in product(range(apps), range(num_confs))) -r ) # - (r/float(apps*sites*servers)) )
+    model.objective = maximize(xsum(a[app][conf] for (app, conf) in product(range(apps), range(num_confs))) - r ) # - (r/float(apps*sites*servers)) )
 
+    #model.threads = 1
+    #model.max_seconds = 900
     model.optimize()
 
     placements = {}
