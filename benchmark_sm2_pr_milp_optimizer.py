@@ -3,8 +3,8 @@ from baas_utilities import *
 import time
 
 #num_apps_ops = [3, 5, 7, 9, 11, 13, 15, 20, 30, 50, 100]
-num_apps_ops = [5]
-num_list_per_size = 2
+num_apps_ops = [3, 5, 7, 9, 11, 13]
+num_list_per_size = 10
 
 aws_locations =     [("CO1", "Columbus, Ohio", (39.983334, -82.983330), 30), 
                      ("CO2", "Columbus, Ohio", (39.983334, -82.983330), 30), 
