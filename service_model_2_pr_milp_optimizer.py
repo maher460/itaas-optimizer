@@ -127,7 +127,7 @@ def sm2_pr_milp_max_sites(app_charcs, resources):
 
                 # P3_T1: PR group must have the minimum number of replicas
                 model += xsum(x[rg][site] for site in range(sites)) >= min_replicas * a[app][t_conf][rg]
-                model += xsum(x[rg][site] for site in range(sites)) <= min_replicas * a[app][t_conf][rg] + (1-a[app][t_conf][rg]) * (max_total_replicas)
+                model += xsum(x[rg][site] for site in range(sites)) <= min_replicas * a[app][t_conf][rg] + (1-a[app][t_conf][rg]) * (max_total_replicas) # TODO: Try with this constraint removed
    
                 # multi site
                 for site in range(sites):
@@ -157,7 +157,7 @@ def sm2_pr_milp_max_sites(app_charcs, resources):
             model += z[rg][site1][site2] >= s[rg][site1] + s[rg][site2] - 1
 
     #model += c >= (xsum( (s[app][l_site] * lats_apps[app][l_site] * 2 + z[app][l_site][s1_site] * lats_sites[l_site][s1_site] + z[app][s2_site][s3_site] * lats_sites[s2_site][s3_site] * 2) / app_charcs[app][3] for (app, l_site, s1_site, s2_site, s3_site) in product(range(apps), range(sites), range(sites), range(sites), range(sites))) / (apps * sites * sites * sites * sites))
-    model += r >= xsum(x[rg][site] for (rg,site) in product(range(apps),range(sites))) / float(max_total_replicas)
+    model += r >= xsum(x[rg][site] for (rg,site) in product(range(apps),range(sites))) / float(max_total_replicas) # TODO: Try with this constraint removed
 
     model.objective = maximize(xsum(a[app][conf][rg] for (app, conf, rg) in product(range(apps), range(num_confs), range(apps))) - r)
 

@@ -100,7 +100,7 @@ def sm1_milp_max_sites(app_charcs, resources):
 
             #Each app has at least the minimum number of replicas
             model += xsum(x[app][site] for site in range(sites)) >= min_replicas * a[app][conf] #(PHASE 2: CAN MULTIPLY THE CONFIGURATION VARIABLE HERE? c[app][config]?)
-            # model += xsum(x[app][site] for site in range(sites)) <= min_replicas * a[app][conf] + (1-a[app][conf]) * max_num_replicas
+            model += xsum(x[app][site] for site in range(sites)) <= min_replicas * a[app][conf] + (1-a[app][conf]) * max_num_replicas
 
             # multi site (# PHASE 2 and also PHASE 1: We can replace this with by just requiring sum(s[app][site]) to be the required number of sites for this app and configuration)
             for site in range(sites):
