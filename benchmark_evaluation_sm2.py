@@ -10,7 +10,7 @@ pp = pprint.PrettyPrinter(indent=0.5)
 evaluation_names = ["service_model_2_heuristic", "service_model_2_milp"]
 
 num_apps_ops = [3, 5, 7, 9, 11, 13, 15, 20, 30]
-#num_apps_ops = [3, 5]
+#num_apps_ops = [3, 5, 7]
 num_list_per_size = 10
 
 def read_benchmark_results(eval_names, aps_ops, amount_per_list):

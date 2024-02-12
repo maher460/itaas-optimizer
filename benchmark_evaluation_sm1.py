@@ -9,8 +9,8 @@ pp = pprint.PrettyPrinter(indent=0.5)
 evaluation_names = ["service_model_1_heuristic", "service_model_1_milp"]
 #evaluation_names = ["service_model_2_heuristic", "service_model_2_milp"]
 
-num_apps_ops = [3, 5, 7, 9, 11, 13, 15, 20, 30]
-#num_apps_ops = [3, 5]
+num_apps_ops = [3, 5, 7, 9, 11, 13, 15, 20, 30, 50]
+#num_apps_ops = [30]
 num_list_per_size = 10
 
 def read_benchmark_results(eval_names, aps_ops, amount_per_list):
@@ -117,6 +117,13 @@ for function_set in function_sets_to_test.keys():
             for a1 in algos_tested:
                 if benchmark_results[num_apps][num_per_app][a1]["verification"]==1:
 
+                    if benchmark_results[num_apps][num_per_app][a1]["num-apps-assigned"] > benchmark_results[num_apps][num_per_app][optimal_algo]["num-apps-assigned"]:
+                        print(num_apps)
+                        print(num_per_app)
+                        print(a1)
+                        pp.pprint(benchmark_results[num_apps][num_per_app][a1])
+                        print(optimal_algo)
+                        pp.pprint(benchmark_results[num_apps][num_per_app][optimal_algo])
                     data_apps[a1].append((benchmark_results[num_apps][num_per_app][a1]["num-apps-assigned"])/float(benchmark_results[num_apps][num_per_app][optimal_algo]["num-apps-assigned"]))
 
                     data_time[a1].append((benchmark_results[num_apps][num_per_app][a1]["execution-time-ms"])/float(benchmark_results[num_apps][num_per_app][optimal_algo]["execution-time-ms"]))

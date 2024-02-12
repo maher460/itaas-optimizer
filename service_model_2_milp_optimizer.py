@@ -1,7 +1,10 @@
-from mip import Model, BINARY, INTEGER, CONTINUOUS, xsum, maximize
+from mip import Model, BINARY, INTEGER, CONTINUOUS, xsum, maximize, minimize
 from baas_utilities import est_lat
 import math
 from itertools import product
+
+import pprint
+pp = pprint.PrettyPrinter(indent=0.5)
 
 def sm2_milp_max_sites(app_charcs, resources):
     
@@ -9,6 +12,8 @@ def sm2_milp_max_sites(app_charcs, resources):
     max_reps = 30
     sites = len(resources)
     servers = 30
+
+    max_num_replicas = (112 * apps) + 1
 
     lats_apps = []
 
@@ -31,7 +36,7 @@ def sm2_milp_max_sites(app_charcs, resources):
     model = Model()
 
     #c = model.add_var(name="C", var_type=CONTINUOUS)
-    r = model.add_var(name="R", var_type=CONTINUOUS)
+    #r = model.add_var(name="R", var_type=CONTINUOUS)
     x = [[model.add_var(var_type=INTEGER, lb=0, ub=servers, name='x({},{})'.format(app+1, site+1)) for site in range(sites)] for app in range(apps)]
     a = [[model.add_var(var_type=BINARY, name='a({},{})'.format(app+1, conf+1)) for conf in range(num_confs)] for app in range(apps)]
     s = [[model.add_var(var_type=BINARY, name='s({},{})'.format(app+1, site+1)) for site in range(sites)] for app in range(apps)]
@@ -88,55 +93,124 @@ def sm2_milp_max_sites(app_charcs, resources):
                     model += z[app][site1][site2] <= s[app][site2]
                     model += z[app][site1][site2] >= s[app][site1] + s[app][site2] - 1
 
-                # lat constraint
-                for (l_site, s1_site, s2_site, s3_site) in product(range(sites), range(sites), range(sites), range(sites)):
-                    model += ((s[app][l_site] * lats_apps[app][l_site] * 2) \
-                         + (z[app][l_site][s1_site] * lats_sites[l_site][s1_site]) \
-                         + (z[app][s2_site][s3_site] * lats_sites[s2_site][s3_site] * 2) \
-                         <= app_charcs[app][3])
+            # lat constraint
+            for (l_site, s1_site, s2_site, s3_site) in product(range(sites), range(sites), range(sites), range(sites)):
+                model += (s[app][l_site] * lats_apps[app][l_site] * 2) \
+                     + (z[app][l_site][s1_site] * lats_sites[l_site][s1_site]) \
+                     + (z[app][s2_site][s3_site] * lats_sites[s2_site][s3_site] * 2) \
+                     <= app_charcs[app][3] * a[app][conf] + 1000 * (1-a[app][conf]) #app_charcs[app][3] * xsum(a[app][conf] for conf in range(num_confs)) + 1000 * (1-xsum(a[app][conf] for conf in range(num_confs))) #<= app_charcs[app][3]
 
-            #Each app has at least the minimum number of replicas
+            # #Each app has at least the minimum number of replicas
             model += xsum(x[app][site] for site in range(sites)) >= min_replicas * a[app][conf] #(PHASE 2: CAN MULTIPLY THE CONFIGURATION VARIABLE HERE? c[app][config]?)
-            model += xsum(x[app][site] for site in range(sites)) <= min_replicas * a[app][conf] + (1-a[app][conf]) * (apps*sites*servers)
+            # model += xsum(x[app][site] for site in range(sites)) <= min_replicas * a[app][conf] + (1-a[app][conf]) * (apps*sites*servers)
 
             # multi site (# PHASE 2 and also PHASE 1: We can replace this with by just requiring sum(s[app][site]) to be the required number of sites for this app and configuration)
             for site in range(sites):
                 model += x[app][site] <= max_replicas_per_site * a[app][conf] + servers * (1-a[app][conf]) #(PHASE 2: Maybe decrease this max_replicas_per_site to force more multiple sites for the different configs? Multiply this with c[app][config] so only one is true)
+                # model += x[app][site] >= max_replicas_per_site * a[app][conf]
 
     # At most 4 replicas permachine
     for site in range(sites):
         model += xsum(x[app][site] for app in range(apps)) <= servers * 4
 
     #model += c >= (xsum( (s[app][l_site] * lats_apps[app][l_site] * 2 + z[app][l_site][s1_site] * lats_sites[l_site][s1_site] + z[app][s2_site][s3_site] * lats_sites[s2_site][s3_site] * 2) / app_charcs[app][3] for (app, l_site, s1_site, s2_site, s3_site) in product(range(apps), range(sites), range(sites), range(sites), range(sites))) / (apps * sites * sites * sites * sites))
-    model += r >= xsum(x[app][site] for (app,site) in product(range(apps),range(sites))) / float(apps*sites*servers)
+    #model += r >= xsum(x[app][site] for (app,site) in product(range(apps),range(sites))) / float(apps*sites*servers)
 
-    model.objective = maximize(xsum(a[app][conf] for (app, conf) in product(range(apps), range(num_confs))) - r ) # - (r/float(apps*sites*servers)) )
+    model.objective = maximize(xsum(a[app][conf] for (app, conf) in product(range(apps), range(num_confs)))) # - (r/float(apps*sites*servers)) )
 
     #model.threads = 1
     #model.max_seconds = 900
     model.optimize()
 
+
+    # Minimizing Replicas
+
+    num_apps = 0
+    for (app, conf) in product(range(apps), range(num_confs)):
+        num_apps += int(a[app][conf].x)
+
+    # print("/n/n DONE WITH ONEEE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! /n/n")
+    # print(num_apps)
+
+    model += xsum(a[app][conf] for (app,conf) in product(range(apps),range(num_confs))) == num_apps
+
+    model.objective = minimize(xsum(x[app][site] for (app,site) in product(range(apps),range(sites))))
+
+    model.optimize()
+
+    # End of Minimizing Replicas
+
+
+
     placements = {}
+
+    site_apps = {}
+    for (app, site) in product(range(apps), range(sites)):
+        if site not in site_apps.keys():
+            site_apps[site] = {}
+        if int(x[app][site].x) > 0:
+            site_apps[site][app] = int(x[app][site].x)
+
+    # print(site_apps)
+
+    # print("\n")
 
     sites_servers = []
     for i in range(sites):
         sites_servers.append([0]*servers)
 
-    # Output of assignments
-    for (app, site) in product(range(apps), range(sites)):
+    for site in site_apps.keys():
+        site_app_list = site_apps[site].items();
+        site_app_list_sorted = sorted(site_app_list, key=lambda item: item[1], reverse=True)
+        # print(site_app_list)
+        # print(site_app_list_sorted)
 
-        server_num = 0
-        for temp_serv_num in range(0, servers):
-            if sites_servers[site][temp_serv_num] >= 4:
+        for site_app in site_app_list_sorted:
+
+            server_num = 0
+            for temp_serv_num in range(0, servers):
+                if sites_servers[site][temp_serv_num] >= 4:
+                    server_num += 1
+
+            for i in range(site_app[1]):
+                app = site_app[0]
+                if(app in placements.keys()):
+                    placements[app].append((resources[site][0], server_num))
+                else:
+                    placements[app] = [(resources[site][0], server_num)]
+                # print(app, site)
+                # print(server_num)
+                # print(sites_servers[site])
+                # print(placements[app])
+                sites_servers[site][server_num] += 1
                 server_num += 1
 
-        for i in range(int(x[app][site].x)):
-            if(app in placements.keys()):
-                placements[app].append((resources[site][0], server_num))
-            else:
-                placements[app] = [(resources[site][0], server_num)]
-            sites_servers[site][server_num] += 1
-            server_num += 1
+
+
+            
+    # sites_servers = []
+    # for i in range(sites):
+    #     sites_servers.append([0]*servers)
+
+    # # Output of assignments
+    # for (app, site) in product(range(apps), range(sites)):
+
+    #     server_num = 0
+    #     for temp_serv_num in range(0, servers):
+    #         if sites_servers[site][temp_serv_num] >= 4:
+    #             server_num += 1
+
+    #     for i in range(int(x[app][site].x)):
+    #         if(app in placements.keys()):
+    #             placements[app].append((resources[site][0], server_num))
+    #         else:
+    #             placements[app] = [(resources[site][0], server_num)]
+    #         print(app, site)
+    #         print(server_num)
+    #         print(sites_servers[site])
+    #         print(placements[app])
+    #         sites_servers[site][server_num] += 1
+    #         server_num += 1
 
     t_placements = []
 
@@ -147,5 +221,7 @@ def sm2_milp_max_sites(app_charcs, resources):
             t_placements.append([])
 
     placements = t_placements
+
+    # print(placements)
 
     return placements
