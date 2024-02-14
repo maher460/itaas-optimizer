@@ -1,9 +1,9 @@
-from service_model_2_pr_milp_optimizer import *
+from service_model_2_pr_milp_optimizer_v1 import *
 from baas_utilities import *
 import time
 
 #num_apps_ops = [3, 5, 7, 9, 11, 13, 15, 20, 30, 50, 100]
-num_apps_ops = [3, 5, 7, 9, 11, 13, 15]
+num_apps_ops = [30]
 num_list_per_size = 10
 
 aws_locations =     [("CO1", "Columbus, Ohio", (39.983334, -82.983330), 30), 
@@ -55,7 +55,10 @@ for num_apps in apps_collection.keys():
 num_processed = 0
 
 for num_apps in apps_collection.keys():
-    for list_num in range(len(apps_collection[num_apps])):
+    list_num_list = range(len(apps_collection[num_apps]))
+    # if num_apps == 20:
+    #     list_num_list = range(6,len(apps_collection[num_apps]))
+    for list_num in list_num_list: #range(len(apps_collection[num_apps])):
         
         temp_res = []
         for func in sm2_functions_to_test:

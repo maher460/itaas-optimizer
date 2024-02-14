@@ -1,4 +1,6 @@
-from mip import Model, BINARY, INTEGER, CONTINUOUS, xsum, maximize
+# Not good results compared to v1
+
+from mip import Model, BINARY, INTEGER, CONTINUOUS, xsum, maximize, minimize
 from baas_utilities import est_lat
 import math
 from itertools import product
@@ -51,7 +53,7 @@ def sm2_pr_milp_max_sites(app_charcs, resources):
 
 
     #c = model.add_var(name="C", var_type=CONTINUOUS)
-    r = model.add_var(name="R", lb=0, ub=1, var_type=CONTINUOUS)
+    #r = model.add_var(name="R", lb=0, ub=1, var_type=CONTINUOUS)
 
     a = [[[model.add_var(var_type=BINARY, name='a({},{},{})'.format(app+1, conf+1, rg+1)) for rg in range(apps)] for conf in range(num_confs)] for app in range(apps)]
     x = [[model.add_var(var_type=INTEGER, lb=0, ub=servers, name='x({},{})'.format(rg+1, site+1)) for site in range(sites)] for rg in range(apps)]
@@ -127,7 +129,7 @@ def sm2_pr_milp_max_sites(app_charcs, resources):
 
                 # P3_T1: PR group must have the minimum number of replicas
                 model += xsum(x[rg][site] for site in range(sites)) >= min_replicas * a[app][t_conf][rg]
-                model += xsum(x[rg][site] for site in range(sites)) <= min_replicas * a[app][t_conf][rg] + (1-a[app][t_conf][rg]) * (max_total_replicas) # TODO: Try with this constraint removed
+                #model += xsum(x[rg][site] for site in range(sites)) <= min_replicas * a[app][t_conf][rg] + (1-a[app][t_conf][rg]) * (max_total_replicas) # TODO: Try with this constraint removed
    
                 # multi site
                 for site in range(sites):
@@ -157,15 +159,39 @@ def sm2_pr_milp_max_sites(app_charcs, resources):
             model += z[rg][site1][site2] >= s[rg][site1] + s[rg][site2] - 1
 
     #model += c >= (xsum( (s[app][l_site] * lats_apps[app][l_site] * 2 + z[app][l_site][s1_site] * lats_sites[l_site][s1_site] + z[app][s2_site][s3_site] * lats_sites[s2_site][s3_site] * 2) / app_charcs[app][3] for (app, l_site, s1_site, s2_site, s3_site) in product(range(apps), range(sites), range(sites), range(sites), range(sites))) / (apps * sites * sites * sites * sites))
-    model += r >= xsum(x[rg][site] for (rg,site) in product(range(apps),range(sites))) / float(max_total_replicas) # TODO: Try with this constraint removed
+    #model += r >= xsum(x[rg][site] for (rg,site) in product(range(apps),range(sites))) / float(max_total_replicas) # TODO: Try with this constraint removed
 
-    model.objective = maximize(xsum(a[app][conf][rg] for (app, conf, rg) in product(range(apps), range(num_confs), range(apps))) - r)
+    model.objective = maximize(xsum(a[app][conf][rg] for (app, conf, rg) in product(range(apps), range(num_confs), range(apps))))
 
     #model.max_seconds = 300
     #model.max_seconds_same_incumbent = 10
     #model.max_nodes = 10000
-    #model.threads = 1
+    model.threads = 12
     model.optimize(max_seconds_same_incumbent=300)
+    #model.optimize()
+
+
+    # Minimizing Replicas
+
+    num_apps = 0
+    for (app, conf, rg) in product(range(apps), range(num_confs), range(apps)):
+        num_apps += int(a[app][conf][rg].x)
+
+    # print("/n/n DONE WITH ONEEE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! /n/n")
+    # print(num_apps)
+
+    model += xsum(a[app][conf][rg] for (app, conf, rg) in product(range(apps), range(num_confs), range(apps))) == num_apps
+    #model += xsum(a[app][conf] for (app,conf) in product(range(apps),range(num_confs))) <= num_apps
+
+    #model += r >= xsum(x[app][site] for (app,site) in product(range(apps),range(sites))) / float(max_num_replicas)
+
+    model.objective = minimize(xsum(x[rg][site] for (rg,site) in product(range(apps),range(sites))))
+
+    model.threads = 12
+    model.optimize(max_seconds_same_incumbent=300)
+
+    # End of Minimizing Replicas
+
 
     placements = {}
 
