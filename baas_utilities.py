@@ -26,6 +26,15 @@ def read_csv_to_list(csv_file):
             data.append(row)
     return data
 
+def read_csv_to_list_with_header(csv_file):
+    data = []
+    with open(csv_file, newline='') as file:
+        reader = csv.reader(file)
+        #next(reader)  # Skip the header
+        for row in reader:
+            data.append(row)
+    return data
+
 
 def dist_coords(coords_1, coords_2):
     if DEBUG == 1:
