@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import csv
 
+plt.rcParams.update({'font.size': 14})
+
 pp = pprint.PrettyPrinter(indent=0.5)
 
 evaluation_names = ["service_model_1_heuristic", "service_model_1_milp"]

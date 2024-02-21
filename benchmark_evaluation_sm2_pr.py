@@ -4,6 +4,8 @@ import pprint
 import matplotlib.pyplot as plt
 import numpy as np
 
+plt.rcParams.update({'font.size': 14})
+
 pp = pprint.PrettyPrinter(indent=0.5)
 
 #evaluation_names = ["service_model_1_heuristic", "service_model_1_milp"]
@@ -71,21 +73,27 @@ function_sets_to_test = {"all": sm2_pr_functions_to_test_all,
                          "min_sites": sm2_pr_functions_to_test_min_sites, 
                          "max_sites": sm2_pr_functions_to_test_max_sites}
 
+name_translate = {"sm2_pr_closest_min_sites": "sm3_closest_min_sites_meet_lat_pr",
+                    "sm2_pr_best_lat_min_sites": "sm3_best_lat_min_sites_meet_lat_pr",
+                    "sm2_pr_closest_max_sites": "sm3_closest_max_sites_meet_lat_pr",
+                    "sm2_pr_best_lat_max_sites": "sm3_best_lat_max_sites_meet_lat_pr",
+                    "sm2_pr_milp_max_sites": "sm3_milp_max_sites_meet_lat_pr"}
+
 
 fig_apps = plt.figure(figsize=(18, 8), layout="constrained")
-fig_apps.suptitle("Service Model 2 with Proactive Recovery: Cumulative distributions of Number of Apps (right is better)")
+fig_apps.suptitle("Service Model 3: Cumulative distributions of Number of Apps (right is better)")
 axs_apps = fig_apps.subplots(2, 2, sharex=True, sharey=True)
 
 fig_replicas = plt.figure(figsize=(18, 8), layout="constrained")
-fig_replicas.suptitle("Service Model 2 with Proactive Recovery: Cumulative distributions of Number of Replicas (left is better)")
+fig_replicas.suptitle("Service Model 3: Cumulative distributions of Number of Replicas (left is better)")
 axs_replicas = fig_replicas.subplots(2, 2, sharex=True, sharey=True)
 
 fig_time = plt.figure(figsize=(18, 8), layout="constrained")
-fig_time.suptitle("Service Model 2 with Proactive Recovery: Cumulative distributions of Execution Time (left is better)")
+fig_time.suptitle("Service Model 3: Cumulative distributions of Execution Time (left is better)")
 axs_time = fig_time.subplots(2, 2, sharex=True, sharey=True)
 
 fig_violations = plt.figure(figsize=(18, 8), layout="constrained")
-fig_violations.suptitle("Service Model 2 with Proactive Recovery: Cumulative distributions of Number of Verified Placements (right is better)")
+fig_violations.suptitle("Service Model 3: Cumulative distributions of Number of Verified Placements (right is better)")
 axs_violations = fig_violations.subplots(2, 2, sharex=True, sharey=True)
 
 fig_row = 0
@@ -123,10 +131,10 @@ for function_set in function_sets_to_test.keys():
                 data_verified_placements[a1].append(benchmark_results[num_apps][num_per_app][a1]["verification"]) #+= 1
 
     for a1 in algos_tested:
-        axs_apps[fig_row][fig_col].ecdf(data_apps[a1], label=a1)
-        axs_replicas[fig_row][fig_col].ecdf(data_replicas[a1], label=a1)
-        axs_time[fig_row][fig_col].ecdf(data_time[a1], label=a1)
-        axs_violations[fig_row][fig_col].ecdf(data_verified_placements[a1], label=a1)
+        axs_apps[fig_row][fig_col].ecdf(data_apps[a1], label=name_translate[a1])
+        axs_replicas[fig_row][fig_col].ecdf(data_replicas[a1], label=name_translate[a1])
+        axs_time[fig_row][fig_col].ecdf(data_time[a1], label=name_translate[a1])
+        axs_violations[fig_row][fig_col].ecdf(data_verified_placements[a1], label=name_translate[a1])
 
     axs_apps[fig_row][fig_col].set_title(function_set)
     axs_apps[fig_row][fig_col].grid(True)
