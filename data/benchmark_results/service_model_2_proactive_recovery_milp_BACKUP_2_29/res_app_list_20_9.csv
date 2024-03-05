@@ -1,0 +1,2 @@
+algo_name,execution-time-ms,verification,comment,num-apps-assigned,num-replicas-assigned,num-machines-used,min-lat,avg-lat,max-lat,min-lat-from-constraint,avg-lat-from-constraint,max-lat-from-constraint
+sm2_pr_milp_max_sites,952512.26,1,,10,239,221,92.36,98.71,107.71,2.59,331.29,906.92

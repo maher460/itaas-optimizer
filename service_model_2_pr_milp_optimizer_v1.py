@@ -168,7 +168,7 @@ def sm2_pr_milp_max_sites(app_charcs, resources):
     #model.max_seconds_same_incumbent = 10
     #model.max_nodes = 10000
     model.threads = 8
-    model.optimize(max_seconds_same_incumbent=900)
+    model.optimize(max_seconds_same_incumbent=1800)
 
     placements = {}
 
