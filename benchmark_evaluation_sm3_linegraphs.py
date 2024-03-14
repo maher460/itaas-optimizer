@@ -2,7 +2,12 @@ from baas_utilities import read_csv_to_list_with_header
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import random
 
+random.seed(42)
+
+color_list = ['blue', 'orange', 'green', 'red', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan']
+random.shuffle(color_list)
 
 # Set text size for all labels
 plt.rcParams.update({'font.size': 14})
@@ -29,8 +34,7 @@ sm2_pr_functions_to_test_max_sites = ["sm2_pr_closest_max_sites",
 
 optimal_algo = "sm2_pr_milp_max_sites"
 
-function_sets_to_test = {"all": sm2_pr_functions_to_test_all, 
-                         "min_sites": sm2_pr_functions_to_test_min_sites, 
+function_sets_to_test = {"min_sites": sm2_pr_functions_to_test_min_sites, 
                          "max_sites": sm2_pr_functions_to_test_max_sites}
 
 name_translate = {"sm2_pr_closest_min_sites": "sm3_closest_min_sites_meet_lat_pr",
@@ -41,22 +45,36 @@ name_translate = {"sm2_pr_closest_min_sites": "sm3_closest_min_sites_meet_lat_pr
 
 def run():
 
+    algo_colors = {}
+    algo_lw = {}
+    algo_ls = {}
+    algo_m = {}
+    algo_mw = {}
+
+    for i in range(len(sm2_pr_functions_to_test_all)):
+        a1 = sm2_pr_functions_to_test_all[i]
+        algo_colors[a1] = color_list[i]
+        algo_lw[a1] = 5-3.5*i/len(sm2_pr_functions_to_test_all)
+        algo_ls[a1] = ['-','--','-.',':'][i%4]
+        algo_m[a1] = ['s','D','o','X'][i%4]
+        algo_mw[a1] = 10-4*i/len(sm2_pr_functions_to_test_all)
+
     #Create the plots
-    fig_apps = plt.figure(figsize=(18, 8), layout="constrained")
-    fig_apps.suptitle("Service Model 3: Average Number of Apps (higher is better)")
-    axs_apps = fig_apps.subplots(2, 2, sharex=True, sharey=True)
+    fig_apps = plt.figure(figsize=(7, 5), layout="constrained")
+    #fig_apps.suptitle("Service Model 3: Average Number of Apps (higher is better)")
+    axs_apps = fig_apps.subplots(2, 1, sharex=True, sharey=True)
 
-    fig_replicas = plt.figure(figsize=(18, 8), layout="constrained")
-    fig_replicas.suptitle("Service Model 3: Average Number of Replicas (lower is better)")
-    axs_replicas = fig_replicas.subplots(2, 2, sharex=True, sharey=True)
+    fig_replicas = plt.figure(figsize=(7, 5), layout="constrained")
+    #fig_replicas.suptitle("Service Model 3: Average Number of Replicas (lower is better)")
+    axs_replicas = fig_replicas.subplots(2, 1, sharex=True, sharey=True)
 
-    fig_time = plt.figure(figsize=(18, 8), layout="constrained")
-    fig_time.suptitle("Service Model 3: Average Execution Time (lower is better)")
-    axs_time = fig_time.subplots(2, 2, sharex=True, sharey=True)
+    fig_time = plt.figure(figsize=(7, 5), layout="constrained")
+    #fig_time.suptitle("Service Model 3: Average Execution Time (lower is better)")
+    axs_time = fig_time.subplots(2, 1, sharex=True, sharey=True)
 
-    fig_violations = plt.figure(figsize=(18, 8), layout="constrained")
-    fig_violations.suptitle("Service Model 3: Average Verification Score (higher is better)")
-    axs_violations = fig_violations.subplots(2, 2, sharex=True, sharey=True)
+    fig_violations = plt.figure(figsize=(7, 5), layout="constrained")
+    #fig_violations.suptitle("Service Model 3: Average Verification Score (higher is better)")
+    axs_violations = fig_violations.subplots(2, 1, sharex=True, sharey=True)
 
     fig_row = 0
     fig_col = 0
@@ -130,45 +148,41 @@ def run():
 
         for i in range(len(algos_tested)):
             a1 = algos_tested[i]
-            lw=5-3.5*i/len(algos_tested)
-            ls=['-','--','-.',':'][i%4]
-            m = ['s','D','o','X'][i%4]
-            mw=10-4*i/len(algos_tested)
-            axs_apps[fig_row][fig_col].plot(pivot_df_apps.index, pivot_df_apps[a1], marker=m, markersize=mw, label=name_translate[a1], alpha=0.9, linestyle=ls, linewidth=lw)
-            axs_replicas[fig_row][fig_col].plot(pivot_df_replicas.index, pivot_df_replicas[a1], marker=m, markersize=mw, label=name_translate[a1], alpha=0.9, linestyle=ls, linewidth=lw)
-            axs_time[fig_row][fig_col].plot(pivot_df_time.index, pivot_df_time[a1], marker=m, markersize=mw, label=name_translate[a1], alpha=0.9, linestyle=ls, linewidth=lw)
-            axs_violations[fig_row][fig_col].plot(pivot_df_verifications.index, pivot_df_verifications[a1], marker=m, markersize=mw, label=name_translate[a1], alpha=0.9, linestyle=ls, linewidth=lw)
+            axs_apps[fig_row].plot(pivot_df_apps.index, pivot_df_apps[a1], marker=algo_m[a1], markersize=algo_mw[a1], label=name_translate[a1], alpha=0.9, linestyle=algo_ls[a1], linewidth=algo_lw[a1], color=algo_colors[a1])
+            axs_replicas[fig_row].plot(pivot_df_replicas.index, pivot_df_replicas[a1], marker=algo_m[a1], markersize=algo_mw[a1], label=name_translate[a1], alpha=0.9, linestyle=algo_ls[a1], linewidth=algo_lw[a1], color=algo_colors[a1])
+            axs_time[fig_row].plot(pivot_df_time.index, pivot_df_time[a1], marker=algo_m[a1], markersize=algo_mw[a1], label=name_translate[a1], alpha=0.9, linestyle=algo_ls[a1], linewidth=algo_lw[a1], color=algo_colors[a1])
+            axs_violations[fig_row].plot(pivot_df_verifications.index, pivot_df_verifications[a1], marker=algo_m[a1], markersize=algo_mw[a1], label=name_translate[a1], alpha=0.9, linestyle=algo_ls[a1], linewidth=algo_lw[a1], color=algo_colors[a1])
 
-        axs_apps[fig_row][fig_col].set_title(function_set)
-        axs_apps[fig_row][fig_col].grid(True)
-        axs_apps[fig_row][fig_col].legend()
-        axs_apps[fig_row][fig_col].set_xlabel('Number of Apps')
-        axs_apps[fig_row][fig_col].set_ylabel('Average Value')
-        axs_apps[fig_row][fig_col].label_outer()
+        axs_apps[fig_row].set_title(function_set)
+        axs_apps[fig_row].grid(True)
+        axs_apps[fig_row].legend()
+        axs_apps[fig_row].set_xlabel('Number of Apps')
+        axs_apps[fig_row].set_ylabel('Average Value')
+        axs_apps[fig_row].label_outer()
 
-        axs_replicas[fig_row][fig_col].set_title(function_set)
-        axs_replicas[fig_row][fig_col].grid(True)
-        axs_replicas[fig_row][fig_col].legend()
-        axs_replicas[fig_row][fig_col].set_xlabel('Number of Apps')
-        axs_replicas[fig_row][fig_col].set_ylabel('Average Value')
-        axs_replicas[fig_row][fig_col].label_outer()
+        axs_replicas[fig_row].set_title(function_set)
+        axs_replicas[fig_row].grid(True)
+        axs_replicas[fig_row].legend()
+        axs_replicas[fig_row].set_xlabel('Number of Apps')
+        axs_replicas[fig_row].set_ylabel('Average Value')
+        axs_replicas[fig_row].label_outer()
 
-        axs_time[fig_row][fig_col].set_title(function_set)
-        axs_time[fig_row][fig_col].grid(True)
-        axs_time[fig_row][fig_col].legend()
-        axs_time[fig_row][fig_col].set_xlabel('Number of Apps')
-        axs_time[fig_row][fig_col].set_ylabel('Average Value')
-        axs_time[fig_row][fig_col].label_outer()
+        axs_time[fig_row].set_title(function_set)
+        axs_time[fig_row].grid(True)
+        axs_time[fig_row].legend()
+        axs_time[fig_row].set_xlabel('Number of Apps')
+        axs_time[fig_row].set_ylabel('Average Value')
+        axs_time[fig_row].label_outer()
 
-        axs_violations[fig_row][fig_col].set_title(function_set)
-        axs_violations[fig_row][fig_col].grid(True)
-        axs_violations[fig_row][fig_col].legend()
-        axs_violations[fig_row][fig_col].set_xlabel('Number of Apps')
-        axs_violations[fig_row][fig_col].set_ylabel('Average Value')
-        axs_violations[fig_row][fig_col].label_outer()
+        axs_violations[fig_row].set_title(function_set)
+        axs_violations[fig_row].grid(True)
+        axs_violations[fig_row].legend()
+        axs_violations[fig_row].set_xlabel('Number of Apps')
+        axs_violations[fig_row].set_ylabel('Average Value')
+        axs_violations[fig_row].label_outer()
 
         fig_col += 1
-        if fig_col >= 2:
+        if fig_col >= 1:
             fig_row += 1
             fig_col = 0
 

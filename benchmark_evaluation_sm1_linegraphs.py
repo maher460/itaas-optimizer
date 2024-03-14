@@ -39,8 +39,7 @@ sm1_functions_to_test_max_sites_meet_lat = ["sm1_closest_max_sites_meet_lat",
 
 optimal_algo = "sm1_milp_max_sites"
 
-function_sets_to_test = {"all": sm1_functions_to_test_all, 
-                         "min_sites": sm1_functions_to_test_min_sites, 
+function_sets_to_test = {"min_sites": sm1_functions_to_test_min_sites, 
                          "max_sites": sm1_functions_to_test_max_sites, 
                          "max_sites_meet_lat": sm1_functions_to_test_max_sites_meet_lat}
 
@@ -61,21 +60,21 @@ def run():
         algo_mw[a1] = 10-4*i/len(sm1_functions_to_test_all)
 
     #Create the plots
-    fig_apps = plt.figure(figsize=(18, 8), layout="constrained")
-    fig_apps.suptitle("Service Model 1: Average Number of Apps (higher is better)")
-    axs_apps = fig_apps.subplots(2, 2, sharex=True, sharey=True)
+    fig_apps = plt.figure(figsize=(7, 8), layout="constrained")
+    #fig_apps.suptitle("Service Model 1: Average Number of Apps (higher is better)")
+    axs_apps = fig_apps.subplots(3, 1, sharex=True, sharey=True)
 
-    fig_replicas = plt.figure(figsize=(18, 8), layout="constrained")
-    fig_replicas.suptitle("Service Model 1: Average Number of Replicas (lower is better)")
-    axs_replicas = fig_replicas.subplots(2, 2, sharex=True, sharey=True)
+    fig_replicas = plt.figure(figsize=(7, 8), layout="constrained")
+    #fig_replicas.suptitle("Service Model 1: Average Number of Replicas (lower is better)")
+    axs_replicas = fig_replicas.subplots(3, 1, sharex=True, sharey=True)
 
-    fig_time = plt.figure(figsize=(18, 8), layout="constrained")
-    fig_time.suptitle("Service Model 1: Average Execution Time (lower is better)")
-    axs_time = fig_time.subplots(2, 2, sharex=True, sharey=True)
+    fig_time = plt.figure(figsize=(7, 8), layout="constrained")
+    #fig_time.suptitle("Service Model 1: Average Execution Time (lower is better)")
+    axs_time = fig_time.subplots(3, 1, sharex=True, sharey=True)
 
-    fig_violations = plt.figure(figsize=(18, 8), layout="constrained")
-    fig_violations.suptitle("Service Model 1: Average Verification Score (higher is better)")
-    axs_violations = fig_violations.subplots(2, 2, sharex=True, sharey=True)
+    fig_violations = plt.figure(figsize=(7, 8), layout="constrained")
+    #fig_violations.suptitle("Service Model 1: Average Verification Score (higher is better)")
+    axs_violations = fig_violations.subplots(3, 1, sharex=True, sharey=True)
 
     fig_row = 0
     fig_col = 0
@@ -149,41 +148,41 @@ def run():
 
         for i in range(len(algos_tested)):
             a1 = algos_tested[i]
-            axs_apps[fig_row][fig_col].plot(pivot_df_apps.index, pivot_df_apps[a1], marker=algo_m[a1], markersize=algo_mw[a1], label=a1, alpha=0.9, linestyle=algo_ls[a1], linewidth=algo_lw[a1], color=algo_colors[a1])
-            axs_replicas[fig_row][fig_col].plot(pivot_df_replicas.index, pivot_df_replicas[a1], marker=algo_m[a1], markersize=algo_mw[a1], label=a1, alpha=0.9, linestyle=algo_ls[a1], linewidth=algo_lw[a1], color=algo_colors[a1])
-            axs_time[fig_row][fig_col].plot(pivot_df_time.index, pivot_df_time[a1], marker=algo_m[a1], markersize=algo_mw[a1], label=a1, alpha=0.9, linestyle=algo_ls[a1], linewidth=algo_lw[a1], color=algo_colors[a1])
-            axs_violations[fig_row][fig_col].plot(pivot_df_verifications.index, pivot_df_verifications[a1], marker=algo_m[a1], markersize=algo_mw[a1], label=a1, alpha=0.9, linestyle=algo_ls[a1], linewidth=algo_lw[a1], color=algo_colors[a1])
+            axs_apps[fig_row].plot(pivot_df_apps.index, pivot_df_apps[a1], marker=algo_m[a1], markersize=algo_mw[a1], label=a1, alpha=0.9, linestyle=algo_ls[a1], linewidth=algo_lw[a1], color=algo_colors[a1])
+            axs_replicas[fig_row].plot(pivot_df_replicas.index, pivot_df_replicas[a1], marker=algo_m[a1], markersize=algo_mw[a1], label=a1, alpha=0.9, linestyle=algo_ls[a1], linewidth=algo_lw[a1], color=algo_colors[a1])
+            axs_time[fig_row].plot(pivot_df_time.index, pivot_df_time[a1], marker=algo_m[a1], markersize=algo_mw[a1], label=a1, alpha=0.9, linestyle=algo_ls[a1], linewidth=algo_lw[a1], color=algo_colors[a1])
+            axs_violations[fig_row].plot(pivot_df_verifications.index, pivot_df_verifications[a1], marker=algo_m[a1], markersize=algo_mw[a1], label=a1, alpha=0.9, linestyle=algo_ls[a1], linewidth=algo_lw[a1], color=algo_colors[a1])
 
-        axs_apps[fig_row][fig_col].set_title(function_set)
-        axs_apps[fig_row][fig_col].grid(True)
-        axs_apps[fig_row][fig_col].legend()
-        axs_apps[fig_row][fig_col].set_xlabel('Number of Apps')
-        axs_apps[fig_row][fig_col].set_ylabel('Average Value')
-        axs_apps[fig_row][fig_col].label_outer()
+        axs_apps[fig_row].set_title(function_set)
+        axs_apps[fig_row].grid(True)
+        axs_apps[fig_row].legend()
+        axs_apps[fig_row].set_xlabel('Number of Apps')
+        axs_apps[fig_row].set_ylabel('Average Value')
+        axs_apps[fig_row].label_outer()
 
-        axs_replicas[fig_row][fig_col].set_title(function_set)
-        axs_replicas[fig_row][fig_col].grid(True)
-        axs_replicas[fig_row][fig_col].legend()
-        axs_replicas[fig_row][fig_col].set_xlabel('Number of Apps')
-        axs_replicas[fig_row][fig_col].set_ylabel('Average Value')
-        axs_replicas[fig_row][fig_col].label_outer()
+        axs_replicas[fig_row].set_title(function_set)
+        axs_replicas[fig_row].grid(True)
+        axs_replicas[fig_row].legend()
+        axs_replicas[fig_row].set_xlabel('Number of Apps')
+        axs_replicas[fig_row].set_ylabel('Average Value')
+        axs_replicas[fig_row].label_outer()
 
-        axs_time[fig_row][fig_col].set_title(function_set)
-        axs_time[fig_row][fig_col].grid(True)
-        axs_time[fig_row][fig_col].legend()
-        axs_time[fig_row][fig_col].set_xlabel('Number of Apps')
-        axs_time[fig_row][fig_col].set_ylabel('Average Value')
-        axs_time[fig_row][fig_col].label_outer()
+        axs_time[fig_row].set_title(function_set)
+        axs_time[fig_row].grid(True)
+        axs_time[fig_row].legend()
+        axs_time[fig_row].set_xlabel('Number of Apps')
+        axs_time[fig_row].set_ylabel('Average Value')
+        axs_time[fig_row].label_outer()
 
-        axs_violations[fig_row][fig_col].set_title(function_set)
-        axs_violations[fig_row][fig_col].grid(True)
-        axs_violations[fig_row][fig_col].legend()
-        axs_violations[fig_row][fig_col].set_xlabel('Number of Apps')
-        axs_violations[fig_row][fig_col].set_ylabel('Average Value')
-        axs_violations[fig_row][fig_col].label_outer()
+        axs_violations[fig_row].set_title(function_set)
+        axs_violations[fig_row].grid(True)
+        axs_violations[fig_row].legend()
+        axs_violations[fig_row].set_xlabel('Number of Apps')
+        axs_violations[fig_row].set_ylabel('Average Value')
+        axs_violations[fig_row].label_outer()
 
         fig_col += 1
-        if fig_col >= 2:
+        if fig_col >= 1:
             fig_row += 1
             fig_col = 0
 
