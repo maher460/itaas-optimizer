@@ -11,7 +11,9 @@ plt.rcParams.update({'font.size': 14})
 
 color_list = ['blue', 'orange', 'green', 'red', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan']
 
-cost_per_machine = 1277.50
+#cost_per_machine = 330.0
+cost_per_machine = 246.77
+
 
 random.shuffle(color_list)
 
