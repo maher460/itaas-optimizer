@@ -43,7 +43,7 @@ For a comprehensive understanding of our experimental setup, including synthetic
 To generate synthetic application data, run the following command:
 
 ```bash
-python3 app_profiles_generator.py
+python3 ITaaS_Synthetic_Apps_Generator.py
 ```
 
 ### Running Optimizers for Service Model 1
@@ -51,8 +51,8 @@ python3 app_profiles_generator.py
 To run heuristic and Mixed-Integer Linear Programming (MILP) optimizers for Service Model 1 on synthetic data, use the following commands:
 
 ```bash
-python3 benchmark_sm1_heuristic_optimizer.py
-python3 benchmark_sm1_milp_optimizer.py
+python3 ITaaS_SM1_Heuristic_Optimizer.py
+python3 ITaaS_SM1_MILP_Optimizer.py
 ```
 
 ### Running Optimizers for Service Model 2
@@ -60,8 +60,8 @@ python3 benchmark_sm1_milp_optimizer.py
 To run heuristic and Mixed-Integer Linear Programming (MILP) optimizers for Service Model 2 on synthetic data, use the following commands:
 
 ```bash
-python3 benchmark_sm2_heuristic_optimizer.py
-python3 benchmark_sm2_milp_optimizer.py
+python3 ITaaS_SM2_Heuristic_Optimizer.py
+python3 ITaaS_SM2_MILP_Optimizer.py
 ```
 
 ### Running Optimizers for Service Model 3
@@ -69,8 +69,8 @@ python3 benchmark_sm2_milp_optimizer.py
 To run heuristic and Mixed-Integer Linear Programming (MILP) optimizers for Service Model 3 on synthetic data, use the following commands:
 
 ```bash
-python3 benchmark_sm3_heuristic_optimizer.py
-python3 benchmark_sm3_milp_optimizer.py
+python3 ITaaS_SM3_Heuristic_Optimizer.py
+python3 ITaaS_SM3_MILP_Optimizer.py
 ```
 
 ### Evaluating Benchmark Results
@@ -90,9 +90,11 @@ To install PyPy3, visit the [PyPy website](https://www.pypy.org/) and follow the
 Once PyPy3 is installed, you can use it to run the optimizers by replacing `python3` with `pypy3` in the command line. For example:
 
 ```bash
-pypy3 benchmark_sm1_heuristic_optimizer.py
-pypy3 benchmark_sm1_milp_optimizer.py
+pypy3 ITaaS_SM1_Heuristic_Optimizer.py
+pypy3 ITaaS_SM1_MILP_Optimizer.py
 ```
+
+Note that pypy3 currently does not work with ITaaS_Evaluator.py since this program uses some libraries not yet supported by pypy3
 
 ## Private License
 
