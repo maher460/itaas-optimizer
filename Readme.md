@@ -81,6 +81,19 @@ To evaluate benchmark results for all three service models and create comparison
 python3 ITaaS_Evaluator.py
 ```
 
+## Speeding Up Optimizers
+
+For faster execution of the optimizers, it's recommended to use PyPy3 instead of Python3. PyPy3 is an alternative Python interpreter that often provides significant performance improvements, especially for compute-intensive tasks like optimization algorithms.
+
+To install PyPy3, visit the [PyPy website](https://www.pypy.org/) and follow the installation instructions for your operating system.
+
+Once PyPy3 is installed, you can use it to run the optimizers by replacing `python3` with `pypy3` in the command line. For example:
+
+```bash
+pypy3 benchmark_sm1_heuristic_optimizer.py
+pypy3 benchmark_sm1_milp_optimizer.py
+```
+
 ## Private License
 
 License terms and conditions detailed in License.txt available in the source code repository.
