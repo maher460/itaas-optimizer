@@ -1,0 +1,20 @@
+[Intrusion-Tolerance as a Service] Private License
+
+Version 1.0, 05/06/2024
+
+This work is part of a larger project that is currently unpublished and proprietary. By accessing or using this work, you agree to the following terms:
+
+1. Limited Use: This work is provided solely for the purpose of review and evaluation as part of the larger project. You may not distribute, share, or use this work for any other purpose without explicit permission from the copyright holder.
+
+2. Confidentiality: This work contains confidential information and is intended only for the intended recipients. You may not disclose, reproduce, or distribute this work to any third party without prior written consent from the copyright holder.
+
+3. No Warranty: This work is provided "as is," without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement.
+
+4. Limitation of Liability: In no event shall the copyright holder be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the use or performance of this work.
+
+5. Reservation of Rights: All rights not expressly granted herein are reserved by the copyright holder.
+
+By accessing or using this work, you acknowledge that you have read, understood, and agree to be bound by the terms and conditions of this license. If you do not agree to these terms, you may not access or use this work.
+
+For inquiries regarding the use of this work or permissions beyond the scope of this license, please contact Maher Khan.
+
