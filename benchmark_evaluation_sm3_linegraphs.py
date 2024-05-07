@@ -1,5 +1,6 @@
 from baas_utilities import read_csv_to_list_with_header
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 import pandas as pd
 import numpy as np
 import random
@@ -155,30 +156,31 @@ def run():
 
         axs_apps[fig_row].set_title(function_set)
         axs_apps[fig_row].grid(True)
-        axs_apps[fig_row].legend()
-        axs_apps[fig_row].set_xlabel('Number of Apps')
-        axs_apps[fig_row].set_ylabel('Average Value')
+        axs_apps[fig_row].legend(reverse=True)
+        axs_apps[fig_row].set_xlabel('Number of Apps per Set')
+        axs_apps[fig_row].set_ylabel('Average Number\nof Apps Placed')
         axs_apps[fig_row].label_outer()
 
         axs_replicas[fig_row].set_title(function_set)
         axs_replicas[fig_row].grid(True)
-        axs_replicas[fig_row].legend()
-        axs_replicas[fig_row].set_xlabel('Number of Apps')
-        axs_replicas[fig_row].set_ylabel('Average Value')
+        axs_replicas[fig_row].legend(reverse=True)
+        axs_replicas[fig_row].set_xlabel('Number of Apps per Set')
+        axs_replicas[fig_row].set_ylabel('Average Number\nof Replicas')
         axs_replicas[fig_row].label_outer()
 
         axs_time[fig_row].set_title(function_set)
         axs_time[fig_row].grid(True)
-        axs_time[fig_row].legend()
-        axs_time[fig_row].set_xlabel('Number of Apps')
-        axs_time[fig_row].set_ylabel('Average Value')
+        axs_time[fig_row].legend(reverse=True)
+        axs_time[fig_row].get_yaxis().set_major_formatter(ticker.FuncFormatter(lambda x, p: format(int(x/1000), ',')))
+        axs_time[fig_row].set_xlabel('Number of Apps per Set')
+        axs_time[fig_row].set_ylabel('Average Execution\nTime (seconds)')
         axs_time[fig_row].label_outer()
 
         axs_violations[fig_row].set_title(function_set)
         axs_violations[fig_row].grid(True)
-        axs_violations[fig_row].legend()
-        axs_violations[fig_row].set_xlabel('Number of Apps')
-        axs_violations[fig_row].set_ylabel('Average Value')
+        axs_violations[fig_row].legend(reverse=True)
+        axs_violations[fig_row].set_xlabel('Number of Apps per Set')
+        axs_violations[fig_row].set_ylabel('Average\nVerification Score')
         axs_violations[fig_row].label_outer()
 
         fig_col += 1

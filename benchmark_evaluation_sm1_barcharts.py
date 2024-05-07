@@ -1,5 +1,6 @@
 from baas_utilities import read_csv_to_list_with_header
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 import pandas as pd
 import numpy as np
 import random
@@ -199,8 +200,8 @@ def run():
         #axs_apps[fig_row].grid(True)
         axs_apps[fig_row].legend(loc='upper left')
 
-        axs_apps[fig_row].set_xlabel('Number of Apps')
-        axs_apps[fig_row].set_ylabel('Average Value')
+        axs_apps[fig_row].set_xlabel('Number of Apps per Set')
+        axs_apps[fig_row].set_ylabel('Average Number\nof Apps Placed')
         axs_apps[fig_row].label_outer()
 
         axs_apps[fig_row].set_xticks([r + barWidth for r in range(len(pivot_df_apps[algos_tested[0]]))], 
@@ -209,8 +210,8 @@ def run():
         axs_replicas[fig_row].set_title(function_set)
         #axs_replicas[fig_row].grid(True)
         axs_replicas[fig_row].legend(loc='upper left')
-        axs_replicas[fig_row].set_xlabel('Number of Apps')
-        axs_replicas[fig_row].set_ylabel('Average Value')
+        axs_replicas[fig_row].set_xlabel('Number of Apps per Set')
+        axs_replicas[fig_row].set_ylabel('Average Number\nof Replicas')
         axs_replicas[fig_row].label_outer()
 
         axs_replicas[fig_row].set_xticks([r + barWidth for r in range(len(pivot_df_replicas[algos_tested[0]]))], 
@@ -219,8 +220,9 @@ def run():
         axs_cost[fig_row].set_title(function_set)
         #axs_cost[fig_row].grid(True)
         axs_cost[fig_row].legend(loc='upper left')
-        axs_cost[fig_row].set_xlabel('Number of Apps')
-        axs_cost[fig_row].set_ylabel('Average Value')
+        axs_cost[fig_row].set_xlabel('Number of Apps per Set')
+        axs_cost[fig_row].get_yaxis().set_major_formatter(ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
+        axs_cost[fig_row].set_ylabel('Average Monthly\nTotal Cost (USD)')
         axs_cost[fig_row].label_outer()
 
         axs_cost[fig_row].set_xticks([r + barWidth for r in range(len(pivot_df_cost[algos_tested[0]]))], 
@@ -229,8 +231,9 @@ def run():
         axs_cost_per_app[fig_row].set_title(function_set)
         #axs_cost_per_app[fig_row].grid(True)
         axs_cost_per_app[fig_row].legend(loc='upper left')
-        axs_cost_per_app[fig_row].set_xlabel('Number of Apps')
-        axs_cost_per_app[fig_row].set_ylabel('Average Value')
+        axs_cost_per_app[fig_row].set_xlabel('Number of Apps per Set')
+        axs_cost_per_app[fig_row].get_yaxis().set_major_formatter(ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
+        axs_cost_per_app[fig_row].set_ylabel('Average Monthly\nCost per App (USD)')
         axs_cost_per_app[fig_row].label_outer()
 
         axs_cost_per_app[fig_row].set_xticks([r + barWidth for r in range(len(pivot_df_cost_per_app[algos_tested[0]]))], 
@@ -239,8 +242,9 @@ def run():
         axs_time[fig_row].set_title(function_set)
         #axs_time[fig_row].grid(True)
         axs_time[fig_row].legend(loc='upper left')
-        axs_time[fig_row].set_xlabel('Number of Apps')
-        axs_time[fig_row].set_ylabel('Average Value')
+        axs_time[fig_row].set_xlabel('Number of Apps per Set')
+        axs_time[fig_row].get_yaxis().set_major_formatter(ticker.FuncFormatter(lambda x, p: format(int(x/1000), ',')))
+        axs_time[fig_row].set_ylabel('Average Execution\nTime (seconds)')
         axs_time[fig_row].label_outer()
 
         axs_time[fig_row].set_xticks([r + barWidth for r in range(len(pivot_df_apps[algos_tested[0]]))], 
@@ -249,8 +253,8 @@ def run():
         axs_violations[fig_row].set_title(function_set)
         #axs_violations[fig_row].grid(True)
         axs_violations[fig_row].legend(loc='lower left')
-        axs_violations[fig_row].set_xlabel('Number of Apps')
-        axs_violations[fig_row].set_ylabel('Average Value')
+        axs_violations[fig_row].set_xlabel('Number of Apps per Set')
+        axs_violations[fig_row].set_ylabel('Average\nVerification Score')
         axs_violations[fig_row].label_outer()
 
         axs_violations[fig_row].set_xticks([r + barWidth for r in range(len(pivot_df_apps[algos_tested[0]]))], 
