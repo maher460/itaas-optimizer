@@ -1,0 +1,10 @@
+ID, region, state, latitude, longitude, servers
+CO1, Columbus, Ohio, 39.983334, -82.983330, 30 
+CO2, Columbus, Ohio, 39.983334, -82.983330, 30 
+EO1, Eastern, Oregon, 45.849800, -119.691598, 30
+EO2, Eastern, Oregon, 45.849800, -119.691598, 30 
+SFC1, San Francisco, California, 37.756098, -122.448587, 30 
+SFC2, San Francisco, California, 37.756098, -122.448587, 30 
+V1, Multiple, Virginia, 38.949541, -77.401809, 30
+V2, Multiple, Virginia, 38.949541, -77.401809, 30
+V3, Multiple, Virginia, 38.949541, -77.401809, 30

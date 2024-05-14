@@ -1,9 +1,0 @@
-algo_name,execution-time-ms,verification,comment,num-apps-assigned,num-replicas-assigned,min-lat,avg-lat,max-lat,min-lat-from-constraint,avg-lat-from-constraint,max-lat-from-constraint
-sm2_round_robin_min_sites,0.99,0,Max expected latency is too high,23,991,264,10.28,87.39,108.08,-7.71,308.26,914.88
-sm2_closest_min_sites,3.27,0,Max expected latency is too high,23,967,259,10.28,66.44,108.08,-8.08,329.22,970.95
-sm2_best_lat_min_sites,1336.6,1,,21,867,229,10.28,57.64,96.61,14.24,347.13,970.95
-sm2_round_robin_max_sites,2.59,0,Max expected latency is too high,50,1050,268,90.0,101.2,109.82,-8.08,318.8,904.08
-sm2_closest_max_sites,7.74,0,Max expected latency is too high,50,1050,269,90.0,101.2,109.82,-8.08,318.8,904.08
-sm2_best_lat_max_sites,396.27,0,Max expected latency is too high,50,1050,269,90.0,101.2,109.82,-8.08,318.8,904.08
-sm2_closest_max_sites_meet_lat,311.28,1,,45,983,251,29.05,97.94,109.82,2.59,328.72,904.08
-sm2_best_lat_max_sites_meet_lat,1913.33,1,,46,997,258,29.05,98.5,109.82,0.64,329.76,904.08

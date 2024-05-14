@@ -38,11 +38,11 @@ optimal_algo = "sm2_pr_milp_max_sites"
 function_sets_to_test = {"min_sites": sm2_pr_functions_to_test_min_sites, 
                          "max_sites": sm2_pr_functions_to_test_max_sites}
 
-name_translate = {"sm2_pr_closest_min_sites": "sm3_closest_min_sites_meet_lat_pr",
-                    "sm2_pr_best_lat_min_sites": "sm3_best_lat_min_sites_meet_lat_pr",
-                    "sm2_pr_closest_max_sites": "sm3_closest_max_sites_meet_lat_pr",
-                    "sm2_pr_best_lat_max_sites": "sm3_best_lat_max_sites_meet_lat_pr",
-                    "sm2_pr_milp_max_sites": "sm3_milp_max_sites_meet_lat_pr"}
+name_translate = {"sm2_pr_closest_min_sites": "sm3_closest_min_sites",
+                    "sm2_pr_best_lat_min_sites": "sm3_best_lat_min_sites",
+                    "sm2_pr_closest_max_sites": "sm3_closest_max_sites",
+                    "sm2_pr_best_lat_max_sites": "sm3_best_lat_max_sites",
+                    "sm2_pr_milp_max_sites": "sm3_milp_max_sites"}
 
 def run():
 

@@ -35,6 +35,23 @@ def read_csv_to_list_with_header(csv_file):
             data.append(row)
     return data
 
+def format_resources(resources):
+    fresources = []
+    for r in resources:
+        fr = (r[0], r[1]+', '+r[2], (float(r[3]), float(r[4])), int(r[5]))
+        fresources.append(fr)
+    return fresources
+
+def read_app_lists(apps_list, aps_ops, amount_per_list):
+    apps_dictionary = {}
+    for num_apps in aps_ops:
+        apps_dictionary[num_apps] = []
+        for num_per_app in range(amount_per_list):
+            fname = apps_list + "/app_list_"+str(num_apps)+"_"+str(num_per_app)+".csv"
+            data = read_csv_to_list(fname)
+            data = [[int(x[0]),int(x[1]),int(x[2]),int(x[3]),(float(x[4]),float(x[5])),int(x[6])] for x in data]
+            apps_dictionary[num_apps].append(data)
+    return apps_dictionary
 
 def dist_coords(coords_1, coords_2):
     if DEBUG == 1:

@@ -1,5 +1,0 @@
-algo_name,execution-time-ms,verification,comment,num-apps-assigned,num-replicas-assigned,num-machines-used,min-lat,avg-lat,max-lat,min-lat-from-constraint,avg-lat-from-constraint,max-lat-from-constraint
-sm2_pr_closest_min_sites,17.73,1,,10,303,225,7.29,50.51,89.35,70.34,389.49,936.0
-sm2_pr_best_lat_min_sites,362.46,1,,10,303,225,7.29,53.57,99.29,70.34,386.43,936.0
-sm2_pr_closest_max_sites,1136.76,1,,20,425,257,90.22,103.0,109.82,6.92,382.0,897.57
-sm2_pr_best_lat_max_sites,404.86,1,,18,426,264,93.08,103.44,109.82,2.94,413.23,906.92

@@ -42,11 +42,11 @@ optimal_algo = "sm2_pr_milp_max_sites"
 function_sets_to_test = {"min_sites": sm2_pr_functions_to_test_min_sites, 
                          "max_sites": sm2_pr_functions_to_test_max_sites}
 
-name_translate = {"sm2_pr_closest_min_sites": "sm3_closest_min_sites_meet_lat_pr",
-                    "sm2_pr_best_lat_min_sites": "sm3_best_lat_min_sites_meet_lat_pr",
-                    "sm2_pr_closest_max_sites": "sm3_closest_max_sites_meet_lat_pr",
-                    "sm2_pr_best_lat_max_sites": "sm3_best_lat_max_sites_meet_lat_pr",
-                    "sm2_pr_milp_max_sites": "sm3_milp_max_sites_meet_lat_pr"}
+name_translate = {"sm2_pr_closest_min_sites": "sm3_closest_min_sites",
+                    "sm2_pr_best_lat_min_sites": "sm3_best_lat_min_sites",
+                    "sm2_pr_closest_max_sites": "sm3_closest_max_sites",
+                    "sm2_pr_best_lat_max_sites": "sm3_best_lat_max_sites",
+                    "sm2_pr_milp_max_sites": "sm3_milp_max_sites"}
 
 def run():
     algo_colors = {}
@@ -210,17 +210,17 @@ def run():
             else:
                 bar_widths.append([x + barWidth for x in bar_widths[i-1]])
 
-            axs_apps[fig_row].bar(bar_widths[i], pivot_df_apps[a1], label=a1, width=barWidth, color=algo_colors[a1])
-            axs_replicas[fig_row].bar(bar_widths[i], pivot_df_replicas[a1], label=a1, width=barWidth, color=algo_colors[a1])
-            axs_machines[fig_row].bar(bar_widths[i], pivot_df_machines[a1], label=a1, width=barWidth, color=algo_colors[a1])
-            axs_cost[fig_row].bar(bar_widths[i], pivot_df_cost[a1], label=a1, width=barWidth, color=algo_colors[a1])
-            axs_cost_per_app[fig_row].bar(bar_widths[i], pivot_df_cost_per_app[a1], label=a1, width=barWidth, color=algo_colors[a1])
-            axs_time[fig_row].bar(bar_widths[i], pivot_df_time[a1], label=a1, width=barWidth, color=algo_colors[a1])
-            axs_violations[fig_row].bar(bar_widths[i], pivot_df_verifications[a1], label=a1, width=barWidth, color=algo_colors[a1])
+            axs_apps[fig_row].bar(bar_widths[i], pivot_df_apps[a1], label=name_translate[a1], width=barWidth, color=algo_colors[a1])
+            axs_replicas[fig_row].bar(bar_widths[i], pivot_df_replicas[a1], label=name_translate[a1], width=barWidth, color=algo_colors[a1])
+            axs_machines[fig_row].bar(bar_widths[i], pivot_df_machines[a1], label=name_translate[a1], width=barWidth, color=algo_colors[a1])
+            axs_cost[fig_row].bar(bar_widths[i], pivot_df_cost[a1], label=name_translate[a1], width=barWidth, color=algo_colors[a1])
+            axs_cost_per_app[fig_row].bar(bar_widths[i], pivot_df_cost_per_app[a1], label=name_translate[a1], width=barWidth, color=algo_colors[a1])
+            axs_time[fig_row].bar(bar_widths[i], pivot_df_time[a1], label=name_translate[a1], width=barWidth, color=algo_colors[a1])
+            axs_violations[fig_row].bar(bar_widths[i], pivot_df_verifications[a1], label=name_translate[a1], width=barWidth, color=algo_colors[a1])
 
         axs_apps[fig_row].set_title(function_set)
         #axs_apps[fig_row].grid(True)
-        axs_apps[fig_row].legend(loc='upper left', bbox_to_anchor=(1, 1))
+        axs_apps[fig_row].legend()
 
         axs_apps[fig_row].set_xlabel('Number of Apps per Set')
         axs_apps[fig_row].set_ylabel('Average Number\nof Apps Placed')
@@ -231,7 +231,7 @@ def run():
 
         axs_replicas[fig_row].set_title(function_set)
         #axs_replicas[fig_row].grid(True)
-        axs_replicas[fig_row].legend(loc='upper left', bbox_to_anchor=(1, 1))
+        axs_replicas[fig_row].legend()
         axs_replicas[fig_row].set_xlabel('Number of Apps per Set')
         axs_replicas[fig_row].set_ylabel('Average Number\nof Replicas')
         axs_replicas[fig_row].label_outer()
@@ -241,7 +241,7 @@ def run():
 
         axs_machines[fig_row].set_title(function_set)
         #axs_machines[fig_row].grid(True)
-        axs_machines[fig_row].legend(loc='upper left', bbox_to_anchor=(1, 1))
+        axs_machines[fig_row].legend()
         axs_machines[fig_row].set_xlabel('Number of Apps per Set')
         axs_machines[fig_row].set_ylabel('Average Number\nof Servers')
         axs_machines[fig_row].label_outer()
@@ -251,7 +251,7 @@ def run():
 
         axs_cost[fig_row].set_title(function_set)
         #axs_cost[fig_row].grid(True)
-        axs_cost[fig_row].legend(loc='upper left', bbox_to_anchor=(1, 1))
+        axs_cost[fig_row].legend()
         axs_cost[fig_row].set_xlabel('Number of Apps per Set')
         axs_cost[fig_row].get_yaxis().set_major_formatter(ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
         axs_cost[fig_row].set_ylabel('Average Monthly\nTotal Cost (USD)')
@@ -262,7 +262,7 @@ def run():
 
         axs_cost_per_app[fig_row].set_title(function_set)
         #axs_cost_per_app[fig_row].grid(True)
-        axs_cost_per_app[fig_row].legend(loc='upper left', bbox_to_anchor=(1, 1))
+        axs_cost_per_app[fig_row].legend()
         axs_cost_per_app[fig_row].set_xlabel('Number of Apps per Set')
         axs_cost_per_app[fig_row].get_yaxis().set_major_formatter(ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
         axs_cost_per_app[fig_row].set_ylabel('Average Monthly\nCost per App (USD)')
@@ -273,7 +273,7 @@ def run():
 
         axs_time[fig_row].set_title(function_set)
         #axs_time[fig_row].grid(True)
-        axs_time[fig_row].legend(loc='upper left', bbox_to_anchor=(1, 1))
+        axs_time[fig_row].legend()
         axs_time[fig_row].set_xlabel('Number of Apps per Set')
         axs_time[fig_row].get_yaxis().set_major_formatter(ticker.FuncFormatter(lambda x, p: format(int(x/1000), ',')))
         axs_time[fig_row].set_ylabel('Average Execution\nTime (seconds)')
@@ -284,7 +284,7 @@ def run():
 
         axs_violations[fig_row].set_title(function_set)
         #axs_violations[fig_row].grid(True)
-        axs_violations[fig_row].legend(loc='lower left', bbox_to_anchor=(1, 1))
+        axs_violations[fig_row].legend()
         axs_violations[fig_row].set_xlabel('Number of Apps per Set')
         axs_violations[fig_row].set_ylabel('Average\nVerification Score')
         axs_violations[fig_row].label_outer()

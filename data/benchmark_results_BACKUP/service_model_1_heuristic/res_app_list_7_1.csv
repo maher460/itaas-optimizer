@@ -1,9 +1,0 @@
-algo_name,execution-time-ms,verification,comment,num-apps-assigned,num-replicas-assigned,min-lat,avg-lat,max-lat,min-lat-from-constraint,avg-lat-from-constraint,max-lat-from-constraint
-sm1_round_robin_min_sites,0.08,1,,7,307,82.4,95.35,103.24,2.59,390.37,908.23
-sm1_closest_min_sites,0.73,1,,7,307,20.43,54.31,94.84,65.87,431.41,914.88
-sm1_best_lat_min_sites,570.75,1,,7,307,12.81,45.75,94.84,65.87,439.96,954.92
-sm1_round_robin_max_sites,0.08,1,,7,143,90.0,97.27,103.24,2.59,388.45,902.41
-sm1_closest_max_sites,0.62,1,,7,143,90.0,97.27,103.24,2.59,388.45,902.41
-sm1_best_lat_max_sites,79.54,1,,7,143,90.0,97.27,103.24,2.59,388.45,902.41
-sm1_closest_max_sites_meet_lat,48.61,1,,7,143,90.0,97.27,103.24,2.59,388.45,902.41
-sm1_best_lat_max_sites_meet_lat,119.09,1,,7,143,90.0,97.27,103.24,2.59,388.45,902.41
