@@ -1,6 +1,7 @@
 # Intrusion-Tolerance as a Service (ITaaS) Optimizer
 
-## Creator: Maher Khan
+### Creator: Maher Khan
+### Advisor: Amy Babay
 
 Welcome to the ITaaS Optimizer GitHub repository! This project focuses on evaluating the efficacy and scalability of our Intrusion-Tolerance as a Service (ITaaS) through a series of experiments across different service models (SM1, SM2, and SM3).
 
